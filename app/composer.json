@@ -1,0 +1,28 @@
+{
+    "require": {
+        "vlucas/phpdotenv": "^3.6",
+        "markrogoyski/simplelog-php": "0.*",
+        "rakibtg/sleekdb": "^1.5",
+        "nesbot/carbon": "^2.24",
+        "opis/container": "^3.0"
+    },
+    "repositories": [
+    ],
+    "autoload": {
+        "psr-4": {
+            "TKuni\\PhpCliAppTemplate\\" : "src/"
+        },
+        "files": [
+            "helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\" : "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8",
+        "mockery/mockery": "dev-master"
+    }
+}
