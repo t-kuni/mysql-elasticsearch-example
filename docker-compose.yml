@@ -20,14 +20,19 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
     command: --default-authentication-plugin=mysql_native_password
+
   elasticsearch:
     build:
-      context: .
-      dockerfile: ./env/elasticsearch/Dockerfile
+      context: ./env/elasticsearch
+      dockerfile: ./Dockerfile
+    ports:
+      - 9200:9200
+
   logstash:
     build:
       context: .
       dockerfile: ./env/logstash/Dockerfile
+
   fluentd:
     build:
       context: ./env/fluentd
@@ -39,10 +44,21 @@ services:
       - '24220:24220'
     environment:
       - DOLLAR=$$
+    depends_on:
+      - mysql
+      - elasticsearch
+
   kibana:
-    image: kibana:7.4.2
+    build:
+      context: ./env/kibana
+      dockerfile: ./Dockerfile
     ports:
       - '5601:5601'
+    depends_on:
+      - elasticsearch
+    environment:
+      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:4.8
     ports:
