@@ -4,7 +4,8 @@
         "markrogoyski/simplelog-php": "0.*",
         "rakibtg/sleekdb": "^1.5",
         "nesbot/carbon": "^2.24",
-        "opis/container": "^3.0"
+        "opis/container": "^3.0",
+        "doctrine/dbal": "^2.10"
     },
     "repositories": [
     ],

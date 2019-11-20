@@ -8,6 +8,8 @@ RUN apk update \
 # Add xdebug
 RUN pecl install xdebug-2.7.2 \
     && docker-php-ext-enable xdebug
+RUN docker-php-ext-install -j$(nproc) pdo_mysql \
+    && docker-php-ext-install -j$(nproc) mysqli
 # Add Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/bin --filename=composer \

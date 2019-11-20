@@ -8,6 +8,8 @@ WORKDIR /app
 #
 # Build app environment.
 #
+RUN docker-php-ext-install -j$(nproc) pdo_mysql \
+    && docker-php-ext-install -j$(nproc) mysqli
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"

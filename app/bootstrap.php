@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use SimpleLog\Logger;
 use TKuni\PhpCliAppTemplate\Infrastructure\interfaces\IExampleRepository;
 use TKuni\PhpCliAppTemplate\Infrastructure\ExampleRepository;
+use TKuni\PhpCliAppTemplate\interfaces\ITestRecordGenerator;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -31,3 +32,4 @@ $app->singleton(LoggerInterface::class, function() {
     return $logger;
 });
 $app->bind(IExampleRepository::class, ExampleRepository::class);
+$app->bind(ITestRecordGenerator::class, TestRecordGenerator::class);
