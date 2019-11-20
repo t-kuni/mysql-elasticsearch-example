@@ -21,17 +21,17 @@ services:
       - MYSQL_ROOT_PASSWORD=password
     command: --default-authentication-plugin=mysql_native_password
 
-  elasticsearch:
-    build:
-      context: ./env/elasticsearch
-      dockerfile: ./Dockerfile
-    ports:
-      - 9200:9200
+#  elasticsearch:
+#    build:
+#      context: ./env/elasticsearch
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - 9200:9200
 
-  logstash:
-    build:
-      context: .
-      dockerfile: ./env/logstash/Dockerfile
+#  logstash:
+#    build:
+#      context: .
+#      dockerfile: ./env/logstash/Dockerfile
 
   fluentd:
     build:
@@ -48,16 +48,30 @@ services:
       - mysql
       - elasticsearch
 
-  kibana:
-    build:
-      context: ./env/kibana
-      dockerfile: ./Dockerfile
+#  kibana:
+#    build:
+#      context: ./env/kibana
+#      dockerfile: ./Dockerfile
+#    ports:
+#      - '5601:5601'
+#    depends_on:
+#      - elasticsearch
+#    environment:
+#      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
     ports:
-      - '5601:5601'
-    depends_on:
-      - elasticsearch
+      - 9200:9200
+    networks: [elastic]
     environment:
-      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+      - discovery.type=single-node
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.4.2
+    ports:
+      - 5601:5601
+    networks: [elastic]
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:4.8
@@ -67,3 +81,6 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=password
       - PMA_HOST=mysql
+
+networks:
+  elastic:
