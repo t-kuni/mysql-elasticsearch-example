@@ -21,7 +21,28 @@ services:
       - MYSQL_ROOT_PASSWORD=password
     command: --default-authentication-plugin=mysql_native_password
   elasticsearch:
-    image: elasticsearch:7.4.2
+    build:
+      context: .
+      dockerfile: ./env/elasticsearch/Dockerfile
+  logstash:
+    build:
+      context: .
+      dockerfile: ./env/logstash/Dockerfile
+  fluentd:
+    build:
+      context: ./env/fluentd
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./env/fluentd/fluent.template.conf:/fluentd/etc/fluent.template.conf
+    ports:
+      - '8888:8888'
+      - '24220:24220'
+    environment:
+      - DOLLAR=$$
+  kibana:
+    image: kibana:7.4.2
+    ports:
+      - '5601:5601'
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:4.8
     ports:

@@ -42,3 +42,8 @@ docker-compose run --rm app-debug
 ```
 docker-compose run --rm app-debug sh
 ```
+
+
+# Reference
+
+logstash: https://www.elastic.co/guide/en/logstash/current/introduction.html
