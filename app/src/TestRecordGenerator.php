@@ -5,6 +5,7 @@ namespace TKuni\PhpCliAppTemplate;
 
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Schema\Schema;
 use TKuni\PhpCliAppTemplate\interfaces\ITestRecordGenerator;
 
 class TestRecordGenerator implements ITestRecordGenerator
@@ -18,15 +19,25 @@ class TestRecordGenerator implements ITestRecordGenerator
         $fromSchema = $sm->createSchema();
         $toSchema   = clone $fromSchema;
 
-        $table = $toSchema->createTable('products');
-        $table->addColumn("id", "integer", ["unsigned" => true]);
-        $table->addColumn("name", "string", ["length" => 32]);
+        $this->setupSchema($toSchema);
 
         $queries = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
 
         foreach ($queries as $query) {
             $conn->query($query);
         }
+
+        $builder = $conn->createQueryBuilder();
+
+        $builder->insert('products')
+            ->values(
+                [
+                    'name' => '?'
+                ]
+            )
+            ->setParameter(0, 'test-product')
+            ->execute();
+
         $conn->close();
     }
 
@@ -53,5 +64,13 @@ class TestRecordGenerator implements ITestRecordGenerator
         return DriverManager::getConnection([
             'url' => 'mysql://root:password@mysql/' . $database,
         ]);
+    }
+
+    private function setupSchema(Schema &$schema)
+    {
+        $table = $schema->createTable('products');
+        $table->addColumn("id", "integer", ["unsigned" => true, 'autoincrement' => 'true']);
+        $table->addColumn("name", "string", ["length" => 32]);
+        $table->setPrimaryKey(['id']);
     }
 }
